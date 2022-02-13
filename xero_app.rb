@@ -124,6 +124,7 @@ end
 # in the xero_client.connections array.
 get '/organisation' do
   xero_client.set_token_set(session[:token_set])
+  puts "TENANT ID::::::::: #{xero_client.connections[0]['tenantId']}"
   @organisations = xero_client.accounting_api.get_organisations(xero_client.connections[0]['tenantId']).organisations
   haml :organisation
 end
