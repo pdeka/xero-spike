@@ -1,1 +1,1 @@
-web: bundle exec thin start -R config.ru -e production -p 3000
+web: bundle exec puma start -R config.ru -e production -p 3000
