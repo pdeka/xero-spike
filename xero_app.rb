@@ -60,7 +60,11 @@ end
 # This endpoint is used to handle the redirect from the
 # Xero OAuth 2.0 authorisation process
 get '/callback' do
+  puts "XERO CLIENT:::: #{xero_client.inspect}"
+  puts "XERO PARAMS:::: #{params.inspect}"
   @token_set = xero_client.get_token_set_from_callback(params)
+  puts "XERO TOKEN:::: #{@token_set.inspect}"
+
   session[:token_set] = @token_set
   redirect to('/')
 end
