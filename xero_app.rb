@@ -135,7 +135,7 @@ get '/organisation' do
 
   begin
     puts "TOKEN IN ORG::::::: #{session[:token_set]['access_token']}"
-    response = RestClient.get 'https://api.xero.com/api.xro/2.0/Organisation', { accept: "application/json", Authorization: "Bearer #{session[:token_set]['access_token']}" }
+    response = RestClient.get 'https://api.xero.com/api.xro/2.0/Organisation', { accept: "application/json", Authorization: "Bearer #{session[:token_set]['access_token']}", "xero-tenant-id": xero_client.connections[0]['tenantId'] }
     response = JSON.parse(response)
     puts "RESPONSE::::#{response.inspect}"
   rescue StandardError => e
