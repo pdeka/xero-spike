@@ -133,19 +133,14 @@ get '/organisation' do
   #   puts "TRACE::::::: #{e.backtrace.inspect}"
   # end
 
-  begin
-    puts "TOKEN IN ORG::::::: #{session[:token_set]['access_token']}"
-    xero_client.set_token_set(session[:token_set])
-    puts "TENANT ID::::::: #{xero_client.connections[0]['tenantId']}"
-    response = RestClient.get 'https://api.xero.com/api.xro/2.0/Organisation', { Accept: "application/json", Authorization: "Bearer #{session[:token_set]['access_token']}", "xero-tenant-id": xero_client.connections[0]['tenantId'] }
-    response = JSON.parse(response)
-    puts "RESPONSE::::#{response.inspect}"
-  rescue StandardError => e
-    puts "ERROR::::::: #{e.message}"
-    puts "TRACE::::::: #{e.backtrace.inspect}"
-  end
+  puts "TOKEN IN ORG::::::: #{session[:token_set]['access_token']}"
+  xero_client.set_token_set(session[:token_set])
+  puts "TENANT ID::::::: #{xero_client.connections[0]['tenantId']}"
+  response = RestClient.get 'https://api.xero.com/api.xro/2.0/Organisation', { Accept: "application/json", Authorization: "Bearer #{session[:token_set]['access_token']}", "xero-tenant-id": xero_client.connections[0]['tenantId'] }
+  response = JSON.parse(response)
+  puts "RESPONSE::::#{response.inspect}"
 
-  @organisations = []
+  @organisations = response["Organisations"]
 
   haml :organisations
 end
