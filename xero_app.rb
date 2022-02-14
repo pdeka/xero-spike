@@ -69,11 +69,7 @@ end
 # This endpoint is used to handle the redirect from the
 # Xero OAuth 2.0 authorisation process
 get '/callback' do
-  puts "XERO CLIENT:::: #{xero_client.inspect}"
-  puts "XERO PARAMS:::: #{params.inspect}"
   @token_set = xero_client.get_token_set_from_callback(params)
-  puts "XERO TOKEN:::: #{@token_set.inspect}"
-
   session[:token_set] = @token_set
   redirect to('/')
 end
@@ -125,7 +121,7 @@ end
 # This endpoint shows invoice data via the 'invoices.haml' view.
 get '/invoices' do
   response = get_request('https://api.xero.com/api.xro/2.0/Invoices')
-  invoices = JSON.parse(response)["Invoices"]
+  @invoices = JSON.parse(response)["Invoices"]
   haml :invoices
 end
 
