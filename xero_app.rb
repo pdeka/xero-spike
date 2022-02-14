@@ -135,6 +135,7 @@ get '/organisation' do
 
   begin
     puts "TOKEN IN ORG::::::: #{session[:token_set]['access_token']}"
+    xero_client.set_token_set(session[:token_set])
     puts "TENANT ID::::::: #{xero_client.connections[0]['tenantId']}"
     response = RestClient.get 'https://api.xero.com/api.xro/2.0/Organisation', { Accept: "application/json", Authorization: "Bearer #{session[:token_set]['access_token']}", "xero-tenant-id": xero_client.connections[0]['tenantId'] }
     response = JSON.parse(response)
