@@ -133,22 +133,8 @@ get '/organisation' do
   haml :organisations
 end
 
-get '/reports' do
-  xero_client.set_token_set(session[:token_set])
-  @reports = xero_client.accounting_api.get_report_ba_sor_gst_list(xero_client.connections[0]['tenantId']).reports
-  haml :reports
-end
-
 get '/transactions' do
-  xero_client.set_token_set(session[:token_set])
-
-  xero_tenant_id = xero_client.connections[0]['tenantId']
-  if_modified_since = "2020-02-06T12:17:43.202-08:00"
-  where = 'Status==#{XeroRuby::Accounting::BankTransaction::AUTHORISED}'
-  order = 'Type ASC'
-  page = 1
-  unitdp = 4
-
-  @transactions = xero_client.accounting_api.get_bank_transactions(xero_tenant_id, if_modified_since, where, order, page, unitdp)
+  response = get_request('https://api.xero.com/api.xro/2.0/BankTransactions')
+  @transactions = JSON.parse(response)["BankTransactions"]
   haml :transactions
 end
