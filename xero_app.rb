@@ -43,7 +43,6 @@ end
 # If we don't, then redirect to the index page to prompt
 # the user to go through the OAuth 2.0 authorization flow.
 before do
-  puts "Token::::::: #{session[:token_set]}"
   pass if request.path_info == '/callback'
   if (request.path_info != '/' && session[:token_set].nil?)
     redirect to('/')
@@ -118,15 +117,12 @@ get '/connections' do
   haml :connections
 end
 
-# This endpoint shows invoice data via the 'invoices.haml' view.
 get '/invoices' do
   response = get_request('https://api.xero.com/api.xro/2.0/Invoices')
   @invoices = JSON.parse(response)["Invoices"]
   haml :invoices
 end
 
-# This endpoint returns the object of the first organisation that appears
-# in the xero_client.connections array.
 get '/organisation' do
   response = get_request('https://api.xero.com/api.xro/2.0/Organisation')
   @organisations = JSON.parse(response)["Organisations"]
