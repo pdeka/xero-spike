@@ -12,7 +12,7 @@ require 'rest-client'
 
 set :session_secret, "328479283uf923fu8932fu923uf9832f23f232"
 use Rack::Session::Pool
-set :haml, :format => :html5
+set :haml, format: :html5
 
 # Setup the credentials we use to connect to the XeroAPI
 CREDENTIALS = {
@@ -133,12 +133,16 @@ get '/organisation' do
   #   puts "TRACE::::::: #{e.backtrace.inspect}"
   # end
 
-  response = RestClient::Request.execute(
-    method: :get,
-    url: 'https://api.xero.com/api.xro/2.0/Organisation',
-    payload: payload, headers: { 'Content-Type' => 'text/xml', 'Authorization' => "Bearer #{session[:token_set]}" })
-  response = JSON.parse(response)
-  puts "RESPONSE::::#{response.inspect}"
+  begin
+    response = RestClient::Request.get 'https://api.xero.com/api.xro/2.0/Organisation', { Authorization: "Bearer #{session[:token_set]}" }
+    response = JSON.parse(response)
+    puts "RESPONSE::::#{response.inspect}"
+
+  rescue StandardError => e
+    puts "ERROR::::::: #{e.message}"
+    puts "TRACE::::::: #{e.backtrace.inspect}"
+  end
+
   @organisations = []
 
   haml :organisations
