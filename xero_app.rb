@@ -126,7 +126,7 @@ get '/organisation' do
   xero_client.set_token_set(session[:token_set])
   puts "TENANT ID::::::::: #{xero_client.connections[0]['tenantId']}"
   begin
-    @organisations = xero_client.accounting_api.get_organisations(xero_client.connections[0]['tenantId'])
+    @organisations = xero_client.accounting_api.get_organisations(xero_client.connections[0]['tenantId']).organisations
   rescue StandardError => e
     puts "ERROR::::::: #{e.message}"
     puts "TRACE::::::: #{e.backtrace.inspect}"
