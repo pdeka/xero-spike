@@ -134,6 +134,7 @@ get '/organisation' do
   # end
 
   begin
+    puts "TOKEN IN ORG::::::: #{session[:token_set]['id_token']}"
     response = RestClient.get 'https://api.xero.com/api.xro/2.0/Organisation', { Authorization: "Bearer #{session[:token_set]['id_token']}" }
     response = JSON.parse(response)
     puts "RESPONSE::::#{response.inspect}"
