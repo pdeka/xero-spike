@@ -28,6 +28,14 @@ helpers do
   def xero_client
     @xero_client ||= XeroRuby::ApiClient.new(credentials: CREDENTIALS)
   end
+
+  def get_request(url)
+    xero_client.set_token_set(session[:token_set])
+    token = session[:token_set]['access_token']
+    tenant = xero_client.connections[0]['tenantId']
+    RestClient.get url, { Accept: "application/json", Authorization: "Bearer #{token}", "xero-tenant-id": tenant }
+  end
+
 end
 
 # Before every request, we need to check that we have
@@ -116,18 +124,15 @@ end
 
 # This endpoint shows invoice data via the 'invoices.haml' view.
 get '/invoices' do
-  xero_client.set_token_set(session[:token_set])
-  @invoices = xero_client.accounting_api.get_invoices(xero_client.connections[0]['tenantId']).invoices
+  response = get_request('https://api.xero.com/api.xro/2.0/Invoices')
+  invoices = JSON.parse(response)["Invoices"]
   haml :invoices
 end
 
 # This endpoint returns the object of the first organisation that appears
 # in the xero_client.connections array.
 get '/organisation' do
-  xero_client.set_token_set(session[:token_set])
-  token = session[:token_set]['access_token']
-  tenant = xero_client.connections[0]['tenantId']
-  response = RestClient.get 'https://api.xero.com/api.xro/2.0/Organisation', { Accept: "application/json", Authorization: "Bearer #{token}", "xero-tenant-id": tenant }
+  response = get_request('https://api.xero.com/api.xro/2.0/Organisation')
   @organisations = JSON.parse(response)["Organisations"]
   haml :organisations
 end
