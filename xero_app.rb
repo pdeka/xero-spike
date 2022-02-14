@@ -8,6 +8,7 @@ require 'securerandom'
 require 'dotenv/load'
 require 'jwt'
 require 'pp'
+require 'rest-client'
 
 set :session_secret, "328479283uf923fu8932fu923uf9832f23f232"
 use Rack::Session::Pool
@@ -123,14 +124,22 @@ end
 # This endpoint returns the object of the first organisation that appears
 # in the xero_client.connections array.
 get '/organisation' do
-  xero_client.set_token_set(session[:token_set])
-  puts "TENANT ID::::::::: #{xero_client.connections[0]['tenantId']}"
-  begin
-    @organisations = xero_client.accounting_api.get_organisations(xero_client.connections[0]['tenantId']).organisations
-  rescue StandardError => e
-    puts "ERROR::::::: #{e.message}"
-    puts "TRACE::::::: #{e.backtrace.inspect}"
-  end
+  # xero_client.set_token_set(session[:token_set])
+  # puts "TENANT ID::::::::: #{xero_client.connections[0]['tenantId']}"
+  # begin
+  #   @organisations = xero_client.accounting_api.get_organisations(xero_client.connections[0]['tenantId']).organisations
+  # rescue StandardError => e
+  #   puts "ERROR::::::: #{e.message}"
+  #   puts "TRACE::::::: #{e.backtrace.inspect}"
+  # end
+
+  response = RestClient::Request.execute(
+    method: :get,
+    url: 'https://api.xero.com/api.xro/2.0/Organisation',
+    payload: payload, headers: { 'Content-Type' => 'text/xml', 'Authorization' => "Bearer #{session[:token_set]}" })
+  response = JSON.parse(response)
+  puts "RESPONSE::::#{response.inspect}"
+  @organisations = []
 
   haml :organisations
 end
