@@ -1,9 +1,11 @@
 This is a basic application showing how to get started with the Xero's official [xero-ruby](https://github.com/XeroAPI/xero-ruby) SDK
 
-*It uses [Sinatra](https://github.com/sinatra/sinatra) which is a DSL for creating simple web applications in Ruby with minimal effort*
+# Example deployment
+
+https://xero-spike.herokuapp.com/
 
 # Getting Started
-### 1) Make sure you have at least Ruby 2.7 [installed](https://www.ruby-lang.org/en/documentation/installation/)
+### 1) Make sure you have at least Ruby 2.7
 ```bash
 ruby -v
 ruby 2.7.0
@@ -17,9 +19,8 @@ https://developer.xero.com/documentation/oauth2/scopes
 
 ### 4) Clone app and rename `sample.env` to `.env` and replace with the **4 required parameters**
 ```bash
-$ git clone git@github.com:XeroAPI/xero-ruby-oauth2-starter.git
-$ cd xero-ruby-oauth2-starter/
-$ mv sample.env .env
+$ git clone https://github.com/pdeka/xero-spike.git
+$ cd xero-spike/
 ```
 Replace `CLIENT_ID`, `CLIENT_SECRET`, `REDIRECT_URI` & `SCOPES` with your unique parameters
 
@@ -31,31 +32,14 @@ $ bundle exec ruby xero_app.rb
 
 > Visit `http://localhost:4567/` and start exploring the code in your editor of choice 🥳
 
-----
-
-## Sample getting started code
-Setting up and connecting to the XeroAPI with the `xero-ruby` SDK is simple
-
-```ruby
-@xero_client = XeroRuby::ApiClient.new(credentials: {
-  client_id: ENV['CLIENT_ID'],
-  client_secret: ENV['CLIENT_SECRET'],
-  redirect_uri: 'http://localhost:4567/callback',
-  scopes: ENV['SCOPES']
-})
-
-get '/auth' do
-  redirect to(@xero_client.authorization_url)
-end
-
-get '/auth/callback' do
-  @xero_client.get_token_set_from_callback(params)
-  tenant_id = @xero_client.connections.last['tenantId']
-  @invoices = @xero_client.accounting_api.get_invoices(tenant_id).invoices
-end
-```
-
 Checkout `xero_app.rb` for all the sample code you need to get started for your own app
 
-## App functionality
-![walkthrough](./public/images/xero-ruby-getting-started.gif)
+
+## Xero API endpoints
+
+https://developer.xero.com/documentation/api/accounting/organisation/#overview
+
+## Getting started guide with details on how to be a partner and have your app in the Xero app store
+
+https://developer.xero.com/documentation/getting-started-guide
+
