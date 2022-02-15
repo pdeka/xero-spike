@@ -21,8 +21,13 @@ https://developer.xero.com/documentation/oauth2/scopes
 ```bash
 $ git clone https://github.com/pdeka/xero-spike.git
 $ cd xero-spike/
+$ mv sample.env .env
 ```
 Replace `CLIENT_ID`, `CLIENT_SECRET`, `REDIRECT_URI` & `SCOPES` with your unique parameters
+
+```bash
+$ source .env
+```
 
 ### 5) Install dependencies & run the app
 ```bash
